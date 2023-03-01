@@ -130,5 +130,9 @@ export async function getInputs(): Promise<IGitSourceSettings> {
   result.githubServerUrl = core.getInput('github-server-url')
   core.debug(`GitHub Host URL = ${result.githubServerUrl}`)
 
+  // Filter spec
+  result.filterSpec = core.getInput('filter-spec')
+  core.debug(`FilterSpec = ${result.filterSpec}`)
+
   return result
 }

@@ -7533,7 +7533,7 @@ class GitCommandManager {
             return output.exitCode === 0;
         });
     }
-    fetch(refSpec, fetchDepth) {
+    fetch(refSpec, fetchDepth, filterSpec) {
         return __awaiter(this, void 0, void 0, function* () {
             const args = ['-c', 'protocol.version=2', 'fetch'];
             if (!refSpec.some(x => x === refHelper.tagsRefSpec)) {
@@ -7545,6 +7545,9 @@ class GitCommandManager {
             }
             else if (fshelper.fileExistsSync(path.join(this.workingDirectory, '.git', 'shallow'))) {
                 args.push('--unshallow');
+            }
+            if (filterSpec) {
+                args.push(`--filter=${filterSpec}`);
             }
             args.push('origin');
             for (const arg of refSpec) {
@@ -18555,6 +18558,9 @@ function getInputs() {
         // Determine the GitHub URL that the repository is being hosted from
         result.githubServerUrl = core.getInput('github-server-url');
         core.debug(`GitHub Host URL = ${result.githubServerUrl}`);
+        // Filter spec
+        result.filterSpec = core.getInput('filter-spec');
+        core.debug(`FilterSpec = ${result.filterSpec}`);
         return result;
     });
 }
@@ -31971,17 +31977,17 @@ function getSource(settings) {
             if (settings.fetchDepth <= 0) {
                 // Fetch all branches and tags
                 let refSpec = refHelper.getRefSpecForAllHistory(settings.ref, settings.commit);
-                yield git.fetch(refSpec);
+                yield git.fetch(refSpec, settings.fetchDepth, settings.filterSpec);
                 // When all history is fetched, the ref we're interested in may have moved to a different
                 // commit (push or force push). If so, fetch again with a targeted refspec.
                 if (!(yield refHelper.testRef(git, settings.ref, settings.commit))) {
                     refSpec = refHelper.getRefSpec(settings.ref, settings.commit);
-                    yield git.fetch(refSpec);
+                    yield git.fetch(refSpec, settings.fetchDepth, settings.filterSpec);
                 }
             }
             else {
                 const refSpec = refHelper.getRefSpec(settings.ref, settings.commit);
-                yield git.fetch(refSpec, settings.fetchDepth);
+                yield git.fetch(refSpec, settings.fetchDepth, settings.filterSpec);
             }
             core.endGroup();
             // Checkout info
