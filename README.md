@@ -101,6 +101,10 @@ When Git 2.18 or higher is not in your PATH, falls back to the REST API to downl
     # running from unless specified. Example URLs are https://github.com or
     # https://my-ghes-server.example.com
     github-server-url: ''
+
+    # Use the partial clone feature and request that the server sends a subset of reachable objects according to a given object filter.
+    # https://git-scm.com/docs/git-clone#Documentation/git-clone.txt---filterltfilter-specgt
+    filter: ''
 ```
 <!-- end usage -->
 
@@ -233,3 +237,16 @@ jobs:
 # License
 
 The scripts and documentation in this project are released under the [MIT License](LICENSE)
+
+
+to update - 
+git command manager -- done
+git source provider -- done
+git source settings -- done
+input helper -- 
+
+tests
+git auth helper
+input helper test
+
+dist

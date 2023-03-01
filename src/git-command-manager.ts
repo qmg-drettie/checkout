@@ -6,7 +6,7 @@ import * as path from 'path'
 import * as refHelper from './ref-helper'
 import * as regexpHelper from './regexp-helper'
 import * as retryHelper from './retry-helper'
-import {GitVersion} from './git-version'
+import { GitVersion } from './git-version'
 
 // Auth header not supported before 2.9
 // Wire protocol v2 not supported before 2.18
@@ -25,7 +25,7 @@ export interface IGitCommandManager {
     add?: boolean
   ): Promise<void>
   configExists(configKey: string, globalConfig?: boolean): Promise<boolean>
-  fetch(refSpec: string[], fetchDepth?: number): Promise<void>
+  fetch(refSpec: string[], fetchDepth?: number, filterSpec?: string): Promise<void>
   getDefaultBranch(repositoryUrl: string): Promise<string>
   getWorkingDirectory(): string
   init(): Promise<void>
@@ -66,7 +66,7 @@ class GitCommandManager {
   private workingDirectory = ''
 
   // Private constructor; use createCommandManager()
-  private constructor() {}
+  private constructor() { }
 
   async branchDelete(remote: boolean, branch: string): Promise<void> {
     const args = ['branch', '--delete', '--force']
@@ -201,7 +201,7 @@ class GitCommandManager {
     return output.exitCode === 0
   }
 
-  async fetch(refSpec: string[], fetchDepth?: number): Promise<void> {
+  async fetch(refSpec: string[], fetchDepth?: number, filterSpec?: string): Promise<void> {
     const args = ['-c', 'protocol.version=2', 'fetch']
     if (!refSpec.some(x => x === refHelper.tagsRefSpec)) {
       args.push('--no-tags')
@@ -216,6 +216,10 @@ class GitCommandManager {
       )
     ) {
       args.push('--unshallow')
+    }
+    
+    if (filterSpec) {
+      args.push(`--filter=${fetchSpec}`)
     }
 
     args.push('origin')
@@ -447,7 +451,7 @@ class GitCommandManager {
       }
     }
 
-    const mergedListeners = {...defaultListener, ...customListeners}
+    const mergedListeners = { ...defaultListener, ...customListeners }
 
     const stdout: string[] = []
     const options = {

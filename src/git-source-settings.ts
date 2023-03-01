@@ -88,4 +88,9 @@ export interface IGitSourceSettings {
    * User override on the GitHub Server/Host URL that hosts the repository to be cloned
    */
   githubServerUrl: string | undefined
+
+  /**
+   * User override for the filter spec to use when fetching
+   */
+  filterSpec: string | undefined
 }
