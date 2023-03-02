@@ -151,6 +151,10 @@ export async function getSource(settings: IGitSourceSettings): Promise<void> {
       await git.lfsInstall()
     }
 
+    if (settings.filterSpec) {
+      await git.config('extensions.partialClone', 'origin')
+    }
+
     // Fetch
     core.startGroup('Fetching the repository')
     if (settings.fetchDepth <= 0) {

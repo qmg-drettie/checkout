@@ -102,8 +102,9 @@ When Git 2.18 or higher is not in your PATH, falls back to the REST API to downl
     # https://my-ghes-server.example.com
     github-server-url: ''
 
-    # Use the partial clone feature and request that the server sends a subset of reachable objects according to a given object filter.
-    # https://git-scm.com/docs/git-clone#Documentation/git-clone.txt---filterltfilter-specgt
+    # Use the partial clone feature and request that the server sends a subset of
+    # reachable objects according to a given object filter.
+    # Default: 
     filter-spec: ''
 ```
 <!-- end usage -->

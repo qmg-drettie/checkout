@@ -31972,6 +31972,9 @@ function getSource(settings) {
             if (settings.lfs) {
                 yield git.lfsInstall();
             }
+            if (settings.filterSpec) {
+                yield git.config('extensions.partialClone', 'origin');
+            }
             // Fetch
             core.startGroup('Fetching the repository');
             if (settings.fetchDepth <= 0) {
